@@ -24,8 +24,8 @@ pub(crate) trait Fs {
 
     fn exists(&self, path: &str) -> io::Result<bool>;
     fn open(&self, options: OpenOptions, path: &str) -> io::Result<Self::File>;
-    fn read_to_string(&self, f: &Self::File) -> io::Result<String>;
-    fn write_to(&mut self, path: &Self::File, content: &[u8]) -> io::Result<()>;
+    fn read_to_string(&self, f: &mut Self::File) -> io::Result<String>;
+    fn write_to(&mut self, path: &mut Self::File, content: &[u8]) -> io::Result<()>;
     fn dir(&self, path: &str) -> io::Result<Vec<Self::DirEnt>>;
     fn is_dir(dirent: &Self::DirEnt) -> bool;
     fn is_file(dirent: &Self::DirEnt) -> bool {
@@ -86,7 +86,7 @@ impl Fs for TestFs {
         Err(io::Error::from(ErrorKind::NotFound))
     }
 
-    fn write_to(&mut self, path: &Self::File, content: &[u8]) -> io::Result<()> {
+    fn write_to(&mut self, path: &mut Self::File, content: &[u8]) -> io::Result<()> {
         if !path.options.write {
             return Err(io::Error::from(ErrorKind::PermissionDenied));
         }
@@ -123,7 +123,7 @@ impl Fs for TestFs {
         self._exists(Arc::from(Path::new(path)))
     }
 
-    fn read_to_string(&self, f: &Self::File) -> io::Result<String> {
+    fn read_to_string(&self, f: &mut Self::File) -> io::Result<String> {
         if self._is_dir(f.path.clone())? {
             return Err(io::Error::from(ErrorKind::IsADirectory));
         }
@@ -195,3 +195,4 @@ impl TestFs {
         Ok(self.0.contains_key(&*path))
     }
 }
+
