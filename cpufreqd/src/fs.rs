@@ -194,15 +194,4 @@ impl TestFs {
     fn _exists(&self, path: Arc<Path>) -> io::Result<bool> {
         Ok(self.0.contains_key(&*path))
     }
-    //fn descendents(&self, path: Arc<Path>) -> Vec<Arc<Path>> {
-    //    self.0
-    //        .iter()
-    //        .filter(|(p, _)| (**p != path) && (p.starts_with(path.clone())))
-    //        .map(|(p, _)| p.clone())
-    //        .collect()
-    //}
-    //fn dir(&self, path: Arc<Path>) -> Vec<TestDirEnt> {
-    //    let len_path = path.iter().count();
-    //    self.descendents(path).iter()
-    //}
 }
